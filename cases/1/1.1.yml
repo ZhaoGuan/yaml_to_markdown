@@ -1,16 +1,3 @@
-# yaml_to_markdown
-将yaml文件转化MARKDOWN,随后准备生成gitbook  
-
-npm install gitbook-cli -g  
-
-run_gitbook.sh是用来运行gitbook内容的脚本  
-module中存放这cases转化yaml成MarkDown的Python脚本和gitbook的配置文件  
-
-recording_service文件夹中是yaml生成用的服务内容  
-
-yaml文件都存放在cases文件夹中，利用文件夹表示层级关系。文件夹同层级需要一个和文件夹相同名字的yml文件来作为根内容。
-yaml用例事例
-````yaml
 #【必填】Desc: 测试用例详细描述
 Desc: 直播轻互动和互动热度
 #【可选】PreCondition 前置条件
@@ -22,6 +9,7 @@ TestPlan:
   -
     CheckPoint:
       #【必填】desc：测试点描述
+      level: P0
       desc: 互动资源下发错误
       cases:
         #【必填】cases：放置具体测试用例
@@ -72,5 +60,3 @@ RelatedModule:
 IncludeTestCase:
   - 日夜间适配
   - 网络适配
-````
-在运行转换用例以后生成的md文件会存放在md_cases,所有的结构都会和cases一模一样。在运行的时候会删除之前生成的用例内容。

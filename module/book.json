@@ -1,0 +1,26 @@
+{
+  "title": "测试用例库",
+  "description": "测试用例库",
+  "author": "GZ",
+  "language": "zh-hans",
+  "root": ".",
+  "plugins": [
+    "toggle-chapters",
+    "theme-comscore",
+    "search-pro",
+    "expandable-chapters",
+    "-sharing",
+    "extra-html"
+  ],
+  "pluginsConfig": {
+    "extra-html": {
+      "header": {
+      },
+      "footer": {
+        "files": [
+          "recording.html"
+        ]
+      }
+    }
+  }
+}
