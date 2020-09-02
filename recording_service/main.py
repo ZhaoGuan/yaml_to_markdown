@@ -10,4 +10,5 @@ if __name__ == "__main__":
     app = Sanic(name="gz")
     CORS(app)
     app.blueprint(to_yaml, url_prefix='/to_yaml')
+    app.static('/', './web_page')
     app.run(host="0.0.0.0", port=8000, access_log=True)

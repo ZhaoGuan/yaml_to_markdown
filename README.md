@@ -8,6 +8,9 @@ module中存放这cases转化yaml成MarkDown的Python脚本和gitbook的配置�
 
 recording_service文件夹中是yaml生成用的服务内容  
 
+入口:  
+http://0.0.0.0:8000/index.html  
+
 yaml文件都存放在cases文件夹中，利用文件夹表示层级关系。文件夹同层级需要一个和文件夹相同名字的yml文件来作为根内容。
 yaml用例事例
 ````yaml
