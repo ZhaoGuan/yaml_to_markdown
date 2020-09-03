@@ -8,11 +8,10 @@ from module.service_method import request_params_check
 
 to_yaml = Blueprint('to_yaml')
 
-db = Resources()
-
 
 @to_yaml.route("/add_attribute", methods=['POST', 'OPTIONS'])
 async def add_attribute(request):
+    db = Resources()
     post_json = request.json
     try:
         info = post_json["info"]
@@ -27,12 +26,12 @@ async def add_attribute(request):
 
 @to_yaml.route("/get_attributes", methods=['GET', 'OPTIONS'])
 async def get_attribute(request):
+    db = Resources()
     data = db.get_attributes()
     return json(
         {
             "code": 20000,
             "data": data
-
         }
     )
 
@@ -41,12 +40,12 @@ async def get_attribute(request):
 async def del_attribute(request):
     args_with_blank_values = request.get_args(keep_blank_values=True)
     info = args_with_blank_values["info"][0]
+    db = Resources()
     data = db.del_attribute(info)
     return json(
         {
             "code": 20000,
             "data": data
-
         }
     )
 
@@ -57,6 +56,7 @@ async def create_element(request):
     name = post_json["name"]
     attribute_list = post_json["attribute_list"]
     attribute_ids = [i["id"] for i in attribute_list]
+    db = Resources()
     result, the_id = db.insert_element(name)
     if result:
         result, msg = db.add_attribute_to_element(the_id, attribute_ids)
@@ -70,6 +70,7 @@ async def create_element(request):
 
 @to_yaml.route("/get_elements_info", methods=['GET', 'OPTIONS'])
 async def get_elements_info(request):
+    db = Resources()
     data = db.get_all_element_data()
     return json({"code": 20000, "data": data})
 
@@ -78,20 +79,17 @@ async def get_elements_info(request):
 async def del_element(request):
     args_with_blank_values = request.get_args(keep_blank_values=True)
     the_id = args_with_blank_values["id"][0]
+    db = Resources()
     result, msg = db.del_element(the_id)
     if result:
-        return json(
-            {
-                "code": 20000,
-                "data": msg
-            }
-        )
+        return json({"code": 20000, "data": msg})
     else:
         return json({"code": 50008, "message": msg})
 
 
 @to_yaml.route("/recording", methods=['POST', 'OPTIONS'])
 async def recording(request):
+    db = Resources()
     data = request.json
     check, message = request_params_check(["pathName", "executor", "message", "result"], list(data.keys()))
     if check is False:

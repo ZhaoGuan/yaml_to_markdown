@@ -29,6 +29,7 @@ class Resources:
     def insert_attribute(self, info):
         if self.check_attribute(info):
             sql = 'INSERT INTO attributes (info) VALUES ("%s")' % str(info)
+            print(sql)
             try:
                 # 执行sql语句
                 self.cursor.execute(sql)
@@ -36,16 +37,20 @@ class Resources:
                 self.db.commit()
                 return True, None
             except Exception as E:
+                print(E)
                 # 如果发生错误则回滚
                 self.db.rollback()
+                self.close()
                 return False, E
         else:
+            self.close()
             return False, "已经存在属性:" + str(info)
 
     def get_attributes(self):
         sql = "SELECT id,info FROM attributes"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+        self.close()
         data_list = []
         for result in results:
             data = {
@@ -59,6 +64,7 @@ class Resources:
         sql = 'SELECT info FROM attributes WHERE `id`="%s"' % the_id
         self.cursor.execute(sql)
         result = self.cursor.fetchone()
+        self.close()
         return result[0]
 
     def del_attribute(self, info):
@@ -69,11 +75,13 @@ class Resources:
             self.cursor.execute(sql)
             # 提交到数据库执行
             self.db.commit()
+            self.close()
             return True, None
         except Exception as E:
             print(E)
             # 如果发生错误则回滚
             self.db.rollback()
+            self.close()
             return False, E
 
     # element
@@ -99,14 +107,17 @@ class Resources:
             except Exception as E:
                 # 如果发生错误则回滚
                 self.db.rollback()
+                self.close()
                 return False, E
         else:
+            self.close()
             return False, "已经存在属性:" + str(name)
 
     def get_element_attributes(self, element_id):
         sql = 'SELECT attribute_id FROM type_attribute WHERE `element_id`="%s"' % str(element_id)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+        self.close()
         result_list = []
         for result in results:
             result_list.append({"info": self.get_attribute(result[0])})
@@ -116,6 +127,7 @@ class Resources:
         sql = "SELECT id,name FROM elements"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+        self.close()
         data_list = []
         for result in results:
             data = {
@@ -137,13 +149,16 @@ class Resources:
             except Exception as E:
                 # 如果发生错误则回滚
                 self.db.rollback()
+                self.close()
                 return False, E
+        self.close()
         return True, None
 
     def get_all_element_data(self):
         sql = 'SELECT id,name FROM elements'
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+        self.close()
         result_data = []
         for result in results:
             the_id = result[0]
@@ -181,6 +196,9 @@ class Resources:
             self.db.rollback()
             return False, E
         return True, None
+
+    def close(self):
+        self.db.close()
 
 
 if __name__ == "__main__":
