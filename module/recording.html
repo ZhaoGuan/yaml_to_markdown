@@ -6,10 +6,6 @@
     <script>
         function hideAll() {
             const pathName = window.location.pathname;
-            if ("job" in pathName) {
-                const data_list = this.pathName.split("/").slice(4);
-                this.pathName = data_list.join("/")
-            }
             if (this.pathName === "/") {
                 const t = document.getElementById('recording');
                 t.style.display = 'none';
@@ -32,7 +28,11 @@
 
         function recording() {
             const pathName = window.location.pathname.replace(".html", "");
-            if (pathName === "/") {
+            if ("job" in pathName) {
+                const data_list = this.pathName.split("/").slice(4);
+                this.pathName = data_list.join("/")
+            }
+            if (this.pathName === "/") {
                 return null
             }
             const httpRequest = new XMLHttpRequest();
@@ -49,7 +49,7 @@
                 httpRequest.open('POST', 'http://0.0.0.0:8000/to_yaml/recording', true);
                 httpRequest.setRequestHeader('content-type', 'application/json');
                 httpRequest.send(JSON.stringify({
-                    pathName: pathName,
+                    pathName: this.pathName,
                     executor: executor,
                     result: selectResult,
                     message: message
