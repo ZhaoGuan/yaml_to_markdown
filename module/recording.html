@@ -29,7 +29,7 @@
         function recording() {
             const pathName = window.location.pathname.replace(".html", "");
             if (pathName.indexOf("job") !== -1 && pathName.indexOf("HTML") !== -1) {
-                const data_list = this.pathName.split("/").slice(4);
+                const data_list = pathName.split("/").slice(4);
                 this.pathName = data_list.join("/")
             }
             console.log(this.pathName);
