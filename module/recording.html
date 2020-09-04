@@ -1,125 +1,126 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="style.css" type="text/css" media="all">
-  <script>
-    function hideAll() {
-      const pathName = window.location.pathname;
-      if (pathName === "/") {
-        const t = document.getElementById('recording');
-        t.style.display = 'none';
-      }
-    }
-
-    function hideSetName() {
-      const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
-      const executor_match = document.cookie.match(reg);
-      if (executor_match != null) {
-        const t = document.getElementById('setName');//选取id为test的元素
-        t.style.display = 'none';	// 隐藏选择的元素
-      }
-    }
-
-    function setExecutor() {
-      const executor = document.getElementById("executor").value;
-      document.cookie = "executor" + "=" + executor;
-    }
-
-    function recording() {
-      let pathName = window.location.pathname.replace(".html", "");
-      if (pathName.indexOf("job") !== -1 && pathName.indexOf("HTML") !== -1) {
-        const data_list = pathName.split("/").slice(4);
-        pathName = data_list.join("/")
-      }
-      console.log(this.pathName);
-      if (pathName === "/") {
-        return null
-      }
-      const httpRequest = new XMLHttpRequest();
-      const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
-      const executor_match = document.cookie.match(reg);
-      const message = document.getElementById("message").value;
-      const select = document.getElementById("result");
-      const selectIndex = select.selectedIndex;
-      const selectResult = select.options[selectIndex].value;
-      if (executor_match == null) {
-        alert("未发现名字，请保存你的名字！");
-      } else {
-        const executor = executor_match[2];
-        httpRequest.open('POST', 'http://0.0.0.0:8000/to_yaml/recording', true);
-        httpRequest.setRequestHeader('content-type', 'application/json');
-        httpRequest.send(JSON.stringify({
-          pathName: pathName,
-          executor: executor,
-          result: selectResult,
-          message: message
-        }));
-        httpRequest.onreadystatechange = function () {
-          if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-            const response = httpRequest.responseText;
-            const json = JSON.parse(response);
-            if (json["code"] !== 20000) {
-              alert(json["msg"]);
-              return;
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css" type="text/css" media="all">
+    <script>
+        function hideAll() {
+            const pathName = window.location.pathname;
+            if (pathName === "/") {
+                const t = document.getElementById('recording');
+                t.style.display = 'none';
             }
-            alert("提交成功!")
-          } else {
-            if (httpRequest.readyState === 4) {
-              alert("提交失败!")
+        }
+
+        function hideSetName() {
+            const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
+            const executor_match = document.cookie.match(reg);
+            if (executor_match != null) {
+                const t = document.getElementById('setName');//选取id为test的元素
+                t.style.display = 'none';	// 隐藏选择的元素
             }
-          }
-        };
-      }
-    }
+        }
 
-    function showName() {
-      const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
-      const executor_match = document.cookie.match(reg);
-      if (executor_match == null) {
-        alert("未发现名字，请保存你的名字！");
-      } else {
-        alert("已经设定的名字为：" + executor_match[2])
-      }
+        function setExecutor() {
+            const executor = document.getElementById("executor").value;
+            document.cookie = "executor" + "=" + executor;
+        }
 
-    }
+        function recording() {
+            let pathName = window.location.pathname.replace(".html", "");
+            if (pathName.indexOf("job") !== -1 && pathName.indexOf("HTML") !== -1) {
+                const data_list = pathName.split("/").slice(4);
+                pathName = "/" + data_list.join("/")
+            }
+            console.log(this.pathName);
+            if (pathName === "/") {
+                return null
+            }
+            const httpRequest = new XMLHttpRequest();
+            const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
+            const executor_match = document.cookie.match(reg);
+            const message = document.getElementById("message").value;
+            const select = document.getElementById("result");
+            const selectIndex = select.selectedIndex;
+            const selectResult = select.options[selectIndex].value;
+            if (executor_match == null) {
+                alert("未发现名字，请保存你的名字！");
+            } else {
+                const executor = executor_match[2];
+                // 这个地址自己更换下
+                httpRequest.open('POST', 'http://192.168.100.2:8000/to_yaml/recording', true);
+                httpRequest.setRequestHeader('content-type', 'application/json');
+                httpRequest.send(JSON.stringify({
+                    pathName: pathName,
+                    executor: executor,
+                    result: selectResult,
+                    message: message
+                }));
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                        const response = httpRequest.responseText;
+                        const json = JSON.parse(response);
+                        if (json["code"] !== 20000) {
+                            alert(json["msg"]);
+                            return;
+                        }
+                        alert("提交成功!")
+                    } else {
+                        if (httpRequest.readyState === 4) {
+                            alert("提交失败!")
+                        }
+                    }
+                };
+            }
+        }
 
-    function cleanCookie() {
-      const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-      if (keys) {
-        for (let i = keys.length; i--;)
-          document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
-      }
-    }
+        function showName() {
+            const reg = new RegExp("(^| )executor=([^;]*)(;|$)");
+            const executor_match = document.cookie.match(reg);
+            if (executor_match == null) {
+                alert("未发现名字，请保存你的名字！");
+            } else {
+                alert("已经设定的名字为：" + executor_match[2])
+            }
 
-  </script>
+        }
+
+        function cleanCookie() {
+            const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+            if (keys) {
+                for (let i = keys.length; i--;)
+                    document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+            }
+        }
+
+    </script>
 </head>
 <body>
 <div id="recording">
-  <HR align=center width=100% color=#987cb9 SIZE=1>
+    <HR align=center width=100% color=#987cb9 SIZE=1>
     <div>
-      <div>执行用例人设定</div>
+        <div>执行用例人设定</div>
     </div>
     <div id="setName">
-      <input id="executor" type="text" value="">
-      <input type="button" value="保存执行用例人的姓名" onclick="setExecutor()">
-      <input type="button" value="检查是否填写执行用例人的名字" onclick="showName()">
-      <input type="button" value="清空执行用例人名字" onclick="cleanCookie()">
+        <input id="executor" type="text" value="">
+        <input type="button" value="保存执行用例人的姓名" onclick="setExecutor()">
+        <input type="button" value="检查是否填写执行用例人的名字" onclick="showName()">
+        <input type="button" value="清空执行用例人名字" onclick="cleanCookie()">
     </div>
     <HR align=center width=100% color=#987cb9 SIZE=1>
-      <div>
+    <div>
         <select id="result">
-          <option value="pass">PASS</option>
-          <option value="fail">FAIL</option>
+            <option value="pass">PASS</option>
+            <option value="fail">FAIL</option>
         </select>
-      </div>
-      <div>
+    </div>
+    <div>
         <div>记录相关内容</div>
         <textarea id="message" style="height: 100px; width: 100%"></textarea>
         <div>提交测试用例</div>
         <input type="button" value="提交" onclick="recording()">
-      </div>
-      <HR align=center width=100% color=#987cb9 SIZE=1>
+    </div>
+    <HR align=center width=100% color=#987cb9 SIZE=1>
 </div>
 </body>
 </html>
