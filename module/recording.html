@@ -6,7 +6,11 @@
     <script>
         function hideAll() {
             const pathName = window.location.pathname;
-            if (pathName === "/") {
+            if ("job" in pathName) {
+                const data_list = this.pathName.split("/").slice(4);
+                this.pathName = data_list.join("/")
+            }
+            if (this.pathName === "/") {
                 const t = document.getElementById('recording');
                 t.style.display = 'none';
             }
