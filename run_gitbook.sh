@@ -14,4 +14,5 @@ cp ./module/README.md ./md_cases
 cp ./module/book.json ./md_cases
 cd md_cases
 gitbook install
-nohup gitbook serve &
+#nohup gitbook serve &
+gitbook build
