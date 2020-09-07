@@ -48,7 +48,7 @@
             } else {
                 const executor = executor_match[2];
                 // 这个地址自己更换下
-                httpRequest.open('POST', 'http://192.168.100.2:8000/to_yaml/recording', true);
+                httpRequest.open('POST', 'http://0.0.0.0:8000/to_yaml/recording', true);
                 httpRequest.setRequestHeader('content-type', 'application/json');
                 httpRequest.send(JSON.stringify({
                     pathName: pathName,
